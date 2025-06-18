@@ -16,12 +16,12 @@ class Post(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), nullable=False)
     content = Column(Text, nullable=False)
-    category_id = Column(Integer, )
+    category_id = Column(Integer, ForeignKey("post_categories.id"))
     author = Column(String(50), default="Jiang")
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
 
-    category = relationship("PostsCategory", back_populates="posts")
+    category = relationship("PostCategory", back_populates="posts")
     tags = relationship("Tag", secondary=post_tags, back_populates="posts")
 
 class PostCategory(Base):
@@ -39,4 +39,4 @@ class Tag(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50), unique=True, nullable=False)
 
-    posts = relationship("Post", back_populates="tags")  
+    posts = relationship("Post", secondary=post_tags, back_populates="tags")
